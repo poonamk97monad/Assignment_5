@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Module\Resource;
 use App\Module\Collection;
 use Illuminate\Http\Request;
 
@@ -12,8 +13,8 @@ class CollectionsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $objData = Collection::latest()->paginate(5);
-        return view('collections.index', compact('objData'))
+        $arrObjCollectionData = Collection::latest()->paginate(5);
+        return view('collection_index', compact('arrObjCollectionData'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -24,7 +25,7 @@ class CollectionsController extends Controller
      */
     public function create()
     {
-        return view('collections.create');
+        return view('create_collections');
     }
 
     /**
@@ -33,17 +34,13 @@ class CollectionsController extends Controller
      * @param  \Illuminate\Http\Request  $strRequest
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $strRequest)
-    {
+    public function store(Request $strRequest) {
+
         $strRequest->validate([
             'title'          =>  'required',
             'slug'           =>  'required',
             'description'    =>  'required'
         ]);
-
-        /*$strFileUpload = $strRequest->file('file_upload');*/
-        /* $strNewName = rand() . '.' . $strFileUpload->getClientOriginalExtension();
-         $strFileUpload->move(public_path('file_upload'), $strNewName);*/
         $arrFormData = array(
             'title'              =>   $strRequest->title,
             'slug'               =>   $strRequest->slug,
@@ -51,7 +48,6 @@ class CollectionsController extends Controller
         );
 
         Collection::create($arrFormData);
-
         return redirect('collection')->with('success', 'Data Added successfully.');
     }
 
@@ -61,9 +57,13 @@ class CollectionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show($intId) {
+
+        $objCollection      = Collection::findOrFail($intId);
+        $arrObjResources    = Resource::all();
+
+        return view('collection_view', array('objCollection' => $objCollection, 'arrObjResources' => $arrObjResources));
+
     }
 
     /**
@@ -72,9 +72,19 @@ class CollectionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($intId) {
+
+        $objData = Resource::findOrFail($intId);
+
+        $arrFormData = array(
+            'title'              =>   $objData->title,
+            'slug'               =>   $objData->slug,
+            'description'        =>   $objData->description
+        );
+
+        Collection::create($arrFormData);
+
+        return redirect('collection_view',compact('$arrFormData'));
     }
 
     /**
@@ -84,9 +94,11 @@ class CollectionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update($intCollectionId,$intResourceId) {
+        $objCollection = Collection::find($intCollectionId);
+        $objCollection->resources()->attach($intResourceId);
+
+        return redirect('collection/'.$intCollectionId)->with('success', 'Data is successfully deleted');;
     }
 
     /**
@@ -95,8 +107,19 @@ class CollectionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($intCollectionId,$intResourceId) {
+
+        $objCollection = Collection::findOrFail($intCollectionId);
+        $objCollection->resources()->detach($intResourceId);
+        return redirect('collection/'.$intCollectionId)->with('success', 'Data is successfully deleted');
     }
+
+   /* public function postAddResourceToCollection() {
+        $intResourceId = request()->get('resource_id');
+        $intCollectionId = request()->get('collection_id');
+        $objCollection = Collection::find($intCollectionId);
+        $objCollection->resources()->attach($intResourceId);
+    }*/
+
+
 }

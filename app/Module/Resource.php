@@ -10,8 +10,11 @@ class Resource extends Model
         'title','slug', 'description', 'file_upload', 'store_file'
     ];
 
-    public function Collection()
-    {
+    public function collection() {
         return $this->belongsToMany(Collection::class);
+    }
+
+    public function collections() {
+        return $this->belongsToMany(Collection::class, 'collection_resources', 'resource_id', 'collection_id');
     }
 }

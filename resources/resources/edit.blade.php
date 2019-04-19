@@ -15,9 +15,9 @@
         <a href="{{ route('resource.index') }}" class="btn btn-default">Back</a>
     </div>
     <br />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <form method="post" action="{{ route('resource.update', $objData->id) }}" enctype="multipart/form-data">
-        @csrf
-        @method('PATCH')
+        {{ csrf_field() }}
         <div class="form-group">
             <label class="col-md-4 text-right">Enter File Title </label>
             <div class="col-md-8">

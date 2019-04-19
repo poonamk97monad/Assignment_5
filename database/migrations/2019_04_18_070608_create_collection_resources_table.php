@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCollectionsResourcesTable extends Migration
+class CreateCollectionResourcesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +15,10 @@ class CreateCollectionsResourcesTable extends Migration
     {
         Schema::create('collection_resources', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('collection_id');
-            $table->integer('resources_id');
-            $table->timestamps();
+            $table->integer('collection_id')->unsigned();
+            $table->foreign('collection_id')->references('id')->on('collections');
+            $table->integer('resource_id')->unsigned();
+            $table->foreign('resource_id')->references('id')->on('resources');
         });
     }
 

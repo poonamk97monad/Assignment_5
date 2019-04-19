@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Module\Resource;
+use App\Module\Collection;
 use Illuminate\Http\Request;
 
 class ResourcesController extends Controller
@@ -12,8 +13,8 @@ class ResourcesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $objData = Resource::latest()->paginate(5);
-        return view('resources.index', compact('objData'))
+        $arrObjResourceData = Resource::latest()->paginate(5);
+        return view('resource_index', compact('arrObjResourceData'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -24,7 +25,7 @@ class ResourcesController extends Controller
      */
     public function create() {
 
-        return view('resources.create');
+        return view('create');
     }
 
     /**
@@ -40,10 +41,6 @@ class ResourcesController extends Controller
             'description'    =>  'required',
             'file_upload'    =>  'required'
         ]);
-
-        /*$strFileUpload = $strRequest->file('file_upload');*/
-       /* $strNewName = rand() . '.' . $strFileUpload->getClientOriginalExtension();
-        $strFileUpload->move(public_path('file_upload'), $strNewName);*/
         $arrFormData = array(
             'title'              =>   $strRequest->title,
             'slug'               =>   $strRequest->slug,
@@ -52,7 +49,6 @@ class ResourcesController extends Controller
         );
 
         Resource::create($arrFormData);
-
         return redirect('resource')->with('success', 'Data Added successfully.');
     }
 
@@ -64,19 +60,11 @@ class ResourcesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($intId) {
-        $objData = Resource::findOrFail($intId);
-        return view('resources.view', compact('objData'));
-    }
+        $arrObjResources      = Resource::findOrFail($intId);
+        $arrObjCollection     = Collection::all();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $intId
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($intId) {
-        $objData = Resource::findOrFail($intId);
-        return view('resources.edit', compact('objData'));
+        return view('resource_view', array('arrObjCollection' => $arrObjCollection, 'arrObjResources' => $arrObjResources));
+
     }
 
     /**
@@ -87,50 +75,22 @@ class ResourcesController extends Controller
      * @param  string $strRequest
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $strRequest, $intId) {
-        $strFileUploadName = $strRequest->hidden_file_upload;
-        $strFileUpload = $strRequest->file('file_upload');
-        if($strFileUpload != '') {
-            $strRequest->validate([
-                'title'           =>  'required',
-                'slug'            =>  'required',
-                'description'     =>  'required',
-                'file_upload'     =>  'required'
-            ]);
+    public function update($intResourceId,$intCollectionId) {
+        $objResource = Resource::find($intResourceId);
+        $objResource->collections()->attach($intCollectionId);
 
-            $strFileUploadName = rand() . '.' . $strFileUpload->getClientOriginalExtension();
-            $strFileUpload->move(public_path('file_upload'), $strFileUploadName);
-        }
-        else {
-            $strRequest->validate([
-                'title'           =>  'required',
-                'description'     =>  'required'
-            ]);
-        }
-
-        $arrFormData = array(
-            'title'            =>   $strRequest->title,
-            'slug'             =>   $strRequest->slug,
-            'description'      =>   $strRequest->description,
-            'file_upload'      =>   $strFileUploadName
-        );
-
-        Resource::whereId($intId)->update($arrFormData);
-
-        return redirect('resource')->with('success', 'Data is successfully updated');
+        return redirect('resource/'.$intResourceId)->with('success', 'Data is successfully deleted');;
     }
-
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $intId
      * @return \Illuminate\Http\Response
      */
-    public function destroy($intId) {
+    public function destroy($intResourceId,$intCollectionId) {
 
-        $objData = Resource::findOrFail($intId);
-        $objData->delete();
-
-        return redirect('resource')->with('success', 'Data is successfully deleted');
+        $objResource = Resource::findOrFail($intResourceId);
+        $objResource->collections()->detach($intCollectionId);
+        return redirect('resource/'.$intResourceId)->with('success', 'Data is successfully deleted');
     }
 }

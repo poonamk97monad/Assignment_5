@@ -16,3 +16,10 @@ Route::get('/', function () {
 });
 Route::resource('resource','ResourcesController');
 Route::resource('collection','CollectionsController');
+
+Route::post('add_collection/{id}/{idr}','CollectionsController@update');
+Route::post('delete_collection/{id}/{idr}','CollectionsController@destroy');
+
+Route::post('resource/{id}/{idr}','ResourcesController@update');
+Route::post('delete_resource/{id}/{idr}','ResourcesController@destroy');
+

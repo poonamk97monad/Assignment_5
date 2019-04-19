@@ -17,7 +17,7 @@ class CreateCollectionsTable extends Migration
         Schema::create('collections', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->string('description');
             $table->timestamps();
         });
@@ -40,3 +40,6 @@ class CreateCollectionsTable extends Migration
         });
     }
 }
+
+
+
