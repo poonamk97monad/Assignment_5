@@ -1,4 +1,3 @@
-
 @extends('parent')
 
 @section('main')
@@ -16,30 +15,38 @@
             </ul>
         </div>
     @endif
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#collectionsModal">Add New Collections</button>
+    <h5 class="right">
+        <form action="/search" method="get">
+            <input type="text" name="search">
+            <input type="submit" value="Search">
+        </form>
+    </h5>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#resourceModal">Add New Resource</button>
     <hr>
-    <h2>Collections</h2>
+    <h2>Resources</h2>
     <hr>
     <table class="table table-bordered table-striped">
         <tr>
+            <th width="35%">Files</th>
             <th width="35%">Title</th>
             <th width="35%">Slug</th>
             <th width="35%">Description</th>
             <th width="30%">Action</th>
             <th width="30%">Favorites</th>
         </tr>
-        @foreach($arrObjCollections as $objCollection)
+        @foreach($arrObjResource as $objResource)
             <tr>
-                <td>{{ $objCollection->title }}</td>
-                <td>{{ $objCollection->slug }}</td>
-                <td>{{ $objCollection->description }}</td>
+                <td><img src="{{ URL::to('/') }}/file_upload/{{ $objResource->file_upload }}" class="img-thumbnail" width="75"  /></td>
+                <td>{{ $objResource->title }}</td>
+                <td>{{ $objResource->slug }}</td>
+                <td>{{ $objResource->description }}</td>
                 <td>
-                    <a href="{{route('collections.show',$objCollection->id)}}" class="btn btn-primary">view</a>
+                    <a href="{{route('resources.show',$objResource->id)}}" class="btn btn-primary">view</a>
                 </td>
                 <td>
-                    <form action="/add_favorites_collection/{{$objCollection->id}}" method="post">
+                    <form action="/add_favorites_resource/{{$objResource->id}}" method="post">
                         {{ csrf_field() }}
-                        @if($objCollection->isFavortted() == 1)
+                        @if($objResource->isFavortted() == 1)
                             <button class="btn btn-success">UnFavorites</button>
                         @else
                             <button class="btn btn-success">Favorites</button>
@@ -50,8 +57,9 @@
         @endforeach
     </table>
     <hr>
-    {!! $arrObjCollections->links() !!}
-    <div class="modal fade" id="collectionsModal" tabindex="-1" role="dialog" aria-labelledby="favoritesModalLabel">
+    {!! $arrObjResource->links() !!}
+
+    <div class="modal fade" id="resourceModal" tabindex="-1" role="dialog" aria-labelledby="favoritesModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -62,8 +70,8 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <form method="post" action="{{ route('collections.store') }}" enctype="multipart/form-data">
 
+                        <form method="post" action="{{ route('resources.store') }}" >
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <label class="col-md-4 text-right">Enter Title of File</label>
@@ -71,9 +79,9 @@
                                     <input type="text" name="title" class="form-control input-lg" />
                                 </div>
                             </div>
-                            <br/>
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
+                            <br />
                             <div class="form-group">
                                 <label class="col-md-4 text-right">Enter Slug</label>
                                 <div class="col-md-8">
@@ -84,6 +92,15 @@
                                 <label class="col-md-4 text-right">Enter Description</label>
                                 <div class="col-md-8">
                                     <input type="text" name="description" class="form-control input-lg" />
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                            <br />
+                            <div class="form-group">
+                                <label class="col-md-4 text-right">Select file upload</label>
+                                <div class="col-md-8">
+                                    <input type="file" name="file_upload" />
                                 </div>
                             </div>
                             <br /><br /><br />
@@ -99,6 +116,5 @@
             </div>
         </div>
     </div>
-
 
 @endsection

@@ -3,35 +3,36 @@
 @section('main')
     <div class="jumbotron text-center">
         <div align="right">
-            <a href="{{ route('collections.index') }}" class="btn btn-default">Back</a>
+            <a href="{{ route('resources.index') }}" class="btn btn-default">Back</a>
         </div>
         <br/>
-        <h3>Title - {{ $objCollection->title}} </h3>
-        <h3>Slug - {{ $objCollection->slug }} </h3>
-        <h3>Description - {{ $objCollection->description }}</h3>
+        <h2>
+            <img src="{{ URL::to('/') }}/file_upload/{{ $arrObjResources->file_upload }}" class="img-thumbnail" width="75" />
+           </h2>
+        <h3>Title - {{ $arrObjResources->title}} </h3>
+        <h3>Slug - {{ $arrObjResources->slug }} </h3>
+        <h3>Description - {{ $arrObjResources->description }}</h3>
     </div>
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#resources">Add Resources</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#resources">Add Resources</button>
     <hr>
-    <h3>list of resources items of this collection</h3>
-    @if($objCollection->resources->count())
+    <h3>list of collection items of this resources</h3>
+    @if($arrObjResources->collections->count())
         <table class="table table-bordered table-striped">
             <tr>
-                <th width="35%">File</th>
                 <th width="35%">Title</th>
                 <th width="35%">Slug</th>
                 <th width="35%">Description</th>
                 <th width="30%">Action</th>
             </tr>
-            @foreach($objCollection->resources as $objResource)
+            @foreach($arrObjResources->collections as $objCollection)
                 <tr>
-                    <td><a href="{{ URL::to('/') }}/file_upload/{{ $objResource->file_upload }}">{{ $objResource->file_upload }}</a></td>
-                    <td>{{ $objResource->title }}</td>
-                    <td>{{ $objResource->slug }}</td>
-                    <td>{{ $objResource->description }}</td>
+                    <td>{{ $objCollection->title }}</td>
+                    <td>{{ $objCollection->slug }}</td>
+                    <td>{{ $objCollection->description }}</td>
                     <td>
-                        <form action="/remove-to-resources/{{$objCollection->id}}" method="post">
+                        <form action="/remove-to-collection/{{$arrObjResources->id}}" method="post">
                             {{ csrf_field() }}
-                            <input type="hidden" name="resource_id" value="{{ $objResource->id}}">
+                            <input type="hidden" name="collection_id" value="{{$objCollection->id}}">
                             <button class="btn btn-danger">Remove From Collection</button>
                         </form>
                     </td>
@@ -48,32 +49,30 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title"
-                        id="favoritesModalLabel">All Resources list</h4>
+                        id="favoritesModalLabel">All Collection list</h4>
                 </div>
                 <div class="modal-body">
                     <div>
-                        <form method="post" action="{{ route('collections.store') }}" enctype="multipart/form-data">
+                        <form method="post" action="{{ route('resources.store') }}" enctype="multipart/form-data">
                             {{ csrf_field() }}
-                            @if($arrObjResources->count())
+                            @if($arrObjCollection->count())
                                 <table class="table table-bordered table-striped">
                                     <tr>
-                                        <th width="35%">File</th>
                                         <th width="35%">Title</th>
                                         <th width="35%">Slug</th>
                                         <th width="35%">Description</th>
                                         <th width="30%">Action</th>
                                     </tr>
-                                    @foreach($arrObjResources as $objResource)
+                                    @foreach($arrObjCollection as $objCollection)
                                         <tr>
-                                            <td><a href="{{ URL::to('/') }}/file_upload/{{ $objResource->file_upload }}">{{ $objResource->file_upload }}</a></td>
-                                            <td>{{ $objResource->title }}</td>
-                                            <td>{{ $objResource->slug }}</td>
-                                            <td>{{ $objResource->description }}</td>
+                                            <td>{{ $objCollection->title }}</td>
+                                            <td>{{ $objCollection->slug }}</td>
+                                            <td>{{ $objCollection->description }}</td>
                                             <td>
-                                                <form action="collection/add-to-resources/{{$objCollection->id}}" method="post">
+                                                <form action="resource/add-to-collection/{{$arrObjResources->id}}" method="post">
                                                     {{ csrf_field() }}
-                                                    <input type="hidden" name="resource_id" value="{{ $objResource->id}}">
-                                                    <button class="btn btn-info">Add to collection</button>
+                                                    <input type="hidden" name="collection_id" value="{{$objCollection->id}}">
+                                                    <button class="btn btn-info">Add to resource</button>
                                                 </form>
                                             </td>
                                         </tr>

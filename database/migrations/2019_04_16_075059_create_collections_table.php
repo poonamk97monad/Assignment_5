@@ -17,14 +17,9 @@ class CreateCollectionsTable extends Migration
         Schema::create('collections', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->string('slug');
             $table->string('description');
             $table->timestamps();
         });
-        foreach (Collection::all() as $collections) {
-            $collections->slug = str_slug($collections->collections_name, '-');
-            $collections->save();
-        }
     }
 
     /**

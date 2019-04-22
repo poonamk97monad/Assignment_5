@@ -15,17 +15,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('resource','ResourcesController');
-Route::resource('collection','CollectionsController');
+Route::resource('resources','ResourcesController');
+Route::post('resources/resource/add-to-collection/{id}','ResourcesController@postAddToCollection');
+Route::post('remove-to-collection/{id}','ResourcesController@postRemoveToCollection');
+Route::post('add_favorites_resource/{id}','ResourcesController@postSetFavorite');
 
-Route::post('add_collection/{id}/{idr}','CollectionsController@update');
-Route::post('delete_collection/{id}/{idr}','CollectionsController@destroy');
 
-Route::post('add_resource/{id}/{idr}','ResourcesController@update');
-Route::post('delete_resource/{id}/{idr}','ResourcesController@destroy');
-
-Route::post('add_favorites_collection/{id}','CollectionsController@setFavorite');
-Route::post('add_favorites_resource/{id}','ResourcesController@setFavorite');
+Route::resource('collections','CollectionsController');
+Route::post('collections/collection/add-to-resources/{id}','CollectionsController@postAddToResource');
+Route::post('remove-to-resources/{id}','CollectionsController@postRemoveToResource');
+Route::post('add_favorites_collection/{id}','CollectionsController@postSetFavorite');
 
 
 Route::get('/search','ResourcesController@search');

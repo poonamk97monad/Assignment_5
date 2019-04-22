@@ -17,15 +17,11 @@ class CreateResourcesTable extends Migration
         Schema::create('resources', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->string('slug');
-            $table->string('description');
+            $table->text('description');
             $table->string('file_upload');
             $table->timestamps();
         });
-        foreach (Resource::all() as $resources) {
-            $resources->slug = str_slug($resources->resources_name, '-');
-            $resources->save();
-        }
+
     }
 
     /**

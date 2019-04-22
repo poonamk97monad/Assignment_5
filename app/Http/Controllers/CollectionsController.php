@@ -6,6 +6,7 @@ use App\Module\Resource;
 use App\Module\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use App\Http\Requests\StoreAddResourceToCollection;
 
 class CollectionsController extends Controller
 {
@@ -18,7 +19,7 @@ class CollectionsController extends Controller
 
         $arrObjCollections = Collection::latest()->paginate(5)
         ;
-        return view('collection_index', compact('arrObjCollections'))
+        return view('collection.index', compact('arrObjCollections'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -38,17 +39,12 @@ class CollectionsController extends Controller
      * @param  \Illuminate\Http\Request  $strRequest
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $strRequest) {
+    public function store(StoreAddResourceToCollection $objResourcetoCollectionRequest) {
 
-        $strRequest->validate([
-            'title'          =>  'required',
-            'slug'           =>  'required',
-            'description'    =>  'required'
-        ]);
         $arrFormData = array(
-            'title'              =>   $strRequest->title,
-            'slug'               =>   $strRequest->slug,
-            'description'        =>   $strRequest->description
+            'title'              =>   $objResourcetoCollectionRequest->title,
+            'slug'               =>   (new CreateSlug())->get($objResourcetoCollectionRequest->title),
+            'description'        =>   $objResourcetoCollectionRequest->description
         );
 
         Collection::create($arrFormData);
@@ -66,7 +62,7 @@ class CollectionsController extends Controller
         $objCollection      = Collection::findOrFail($intId);
         $arrObjResources    = Resource::all();
 
-        return view('collection_view', array('objCollection' => $objCollection, 'arrObjResources' => $arrObjResources));
+        return view('collection.view', array('objCollection' => $objCollection, 'arrObjResources' => $arrObjResources));
 
     }
 
@@ -98,11 +94,11 @@ class CollectionsController extends Controller
      * @param  int  $intCollectionId,$intResourceId
      * @return \Illuminate\Http\Response
      */
-    public function update($intCollectionId,$intResourceId) {
+    public function postAddToResource(Request $obRequest,$intCollectionId) {
         $objCollection = Collection::find($intCollectionId);
-        $objCollection->resources()->attach($intResourceId);
+        $objCollection->resources()->attach($obRequest->get('resource_id'));
 
-        return redirect('collection/'.$intCollectionId)->with('success', 'Data is successfully deleted');;
+        return redirect('collections/'.$intCollectionId)->with('success', 'Data is successfully deleted');;
     }
 
     /**
@@ -110,18 +106,18 @@ class CollectionsController extends Controller
      * @param  int $intCollectionId,$intResourceId
      * @return \Illuminate\Http\Response
      */
-    public function destroy($intCollectionId,$intResourceId) {
+    public function postRemoveToResource(Request $obRequest,$intCollectionId) {
 
         $objCollection = Collection::findOrFail($intCollectionId);
-        $objCollection->resources()->detach($intResourceId);
-        return redirect('collection/'.$intCollectionId)->with('success', 'Data is successfully deleted');
+        $objCollection->resources()->detach($obRequest->get('resource_id'));
+        return redirect('collections/'.$intCollectionId)->with('success', 'Data is successfully deleted');
     }
 
     /**
      * add in favorites
      * @param $intUserId
      */
-    public function setFavorite($intUserId) {
+    public function postSetFavorite($intUserId) {
         $boolIsFavoritted = Redis::SISMEMBER('favorite:collection', $intUserId);
         if($boolIsFavoritted == 1) {
             $objRedis = Redis::srem('favorite:collection', $intUserId);
