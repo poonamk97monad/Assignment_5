@@ -1,9 +1,6 @@
 @extends('parent')
 
 @section('main')
-    {{--<div>
-        <a href="{{route('collection.create')}}" class="btn btn-success">Add</a>
-    </div>--}}
     <div class="jumbotron text-center">
         <div align="right">
             <a href="{{ route('resource.index') }}" class="btn btn-default">Back</a>
@@ -14,21 +11,17 @@
         <h3>Slug - {{ $arrObjResources->slug }} </h3>
         <h3>Description - {{ $arrObjResources->description }}</h3>
     </div>
-
-
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#resources">Add Resources</button>
     <hr>
     <h3>list of collection items of this resources</h3>
     @if($arrObjResources->collections->count())
         <table class="table table-bordered table-striped">
-
             <tr>
                 <th width="35%">Title</th>
                 <th width="35%">Slug</th>
                 <th width="35%">Description</th>
                 <th width="30%">Action</th>
             </tr>
-
             @foreach($arrObjResources->collections as $objCollection)
                 <tr>
                     <td>{{ $objCollection->title }}</td>
@@ -39,15 +32,11 @@
                             {{ csrf_field() }}
                             <button class="btn btn-danger">Remove From Collection</button>
                         </form>
-                        {{--<a href="{{route('collection.destroy',[$objCollection->id, $objResource->id])}}" class="btn btn-primary">Remove From Collection</a>--}}
                     </td>
                 </tr>
-                {{--  {{dd($objCollection->title)}}--}}
             @endforeach
         </table>
     @endif
-
-
     <div class="modal fade" id="resources"
          tabindex="-1" role="dialog"
          aria-labelledby="favoritesModalLabel">
@@ -81,16 +70,12 @@
                                                     {{ csrf_field() }}
                                                     <button class="btn btn-info">Add to resource</button>
                                                 </form>
-
-                                                {{-- <a href="{{route('collection.update',[$objCollection->id, $objResource->id])}}" --}}{{--onclick="addResourceToCollection('{{$objCollection->getKey()}}', '{{$objResource->getKey()}}')"--}}{{-- class="btn btn-primary" >Add</a>--}}
                                             </td>
                                         </tr>
                                     @endforeach
                                 </table>
                             @endif
                         </form>
-
-                        {{-- <a href="{{route('collection.create')}}" class="btn btn-success">Add</a>--}}
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -99,13 +84,4 @@
             </div>
         </div>
     </div>
-    <script>
-        /* function addResourceToCollection(intCollectionId, intResourceId) {
-             console.log("intResourceId")
-             console.log(intResourceId)
-             $intResourceId   = intResourceId;
-             $intCollectionId = intCollectionId;
-
-         }*/
-    </script>
 @endsection

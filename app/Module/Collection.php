@@ -35,13 +35,13 @@ class Collection extends Model
         'title', 'slug','description'
     ];
 
-    public function resource()
-    {
+    public function resource() {
+
         return $this->belongsToMany(Resource::class);
     }
 
-    public function resources()
-    {
+    public function resources() {
+
         return $this->belongsToMany(Resource::class, 'collection_resources', 'collection_id', 'resource_id');
     }
 

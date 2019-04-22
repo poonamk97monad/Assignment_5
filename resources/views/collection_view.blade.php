@@ -38,8 +38,6 @@
             @endforeach
         </table>
     @endif
-
-
     <div class="modal fade" id="resources"
          tabindex="-1" role="dialog"
          aria-labelledby="favoritesModalLabel">
@@ -75,16 +73,12 @@
                                                     {{ csrf_field() }}
                                                     <button class="btn btn-info">Add to collection</button>
                                                 </form>
-
-                                                {{-- <a href="{{route('collection.update',[$objCollection->id, $objResource->id])}}" --}}{{--onclick="addResourceToCollection('{{$objCollection->getKey()}}', '{{$objResource->getKey()}}')"--}}{{-- class="btn btn-primary" >Add</a>--}}
                                             </td>
                                         </tr>
                                     @endforeach
                                 </table>
                             @endif
                         </form>
-
-                        {{-- <a href="{{route('collection.create')}}" class="btn btn-success">Add</a>--}}
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -93,13 +87,4 @@
             </div>
         </div>
     </div>
-    <script>
-        /* function addResourceToCollection(intCollectionId, intResourceId) {
-             console.log("intResourceId")
-             console.log(intResourceId)
-             $intResourceId   = intResourceId;
-             $intCollectionId = intCollectionId;
-
-         }*/
-    </script>
 @endsection

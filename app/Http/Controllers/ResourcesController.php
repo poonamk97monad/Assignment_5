@@ -96,6 +96,8 @@ class ResourcesController extends Controller
         $objResource->collections()->detach($intCollectionId);
         return redirect('resource/'.$intResourceId)->with('success', 'Data is successfully deleted');
     }
+
+
     /**
      * Add in favrite
      * @param $intUserId

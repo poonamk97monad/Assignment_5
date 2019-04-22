@@ -15,6 +15,7 @@ class CollectionsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
+
         $arrObjCollections = Collection::latest()->paginate(5)
         ;
         return view('collection_index', compact('arrObjCollections'))
@@ -26,8 +27,8 @@ class CollectionsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
+
         return view('create_collections');
     }
 
@@ -61,6 +62,7 @@ class CollectionsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($intId) {
+
         $objCollection      = Collection::findOrFail($intId);
         $arrObjResources    = Resource::all();
 
@@ -93,7 +95,7 @@ class CollectionsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $intCollectionId,$intResourceId
      * @return \Illuminate\Http\Response
      */
     public function update($intCollectionId,$intResourceId) {
@@ -105,8 +107,7 @@ class CollectionsController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
+     * @param  int $intCollectionId,$intResourceId
      * @return \Illuminate\Http\Response
      */
     public function destroy($intCollectionId,$intResourceId) {
@@ -117,6 +118,7 @@ class CollectionsController extends Controller
     }
 
     /**
+     * add in favorites
      * @param $intUserId
      */
     public function setFavorite($intUserId) {
