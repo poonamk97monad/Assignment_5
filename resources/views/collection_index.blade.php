@@ -1,3 +1,4 @@
+
 @extends('parent')
 
 @section('main')
@@ -25,20 +26,31 @@
             <th width="35%">Slug</th>
             <th width="35%">Description</th>
             <th width="30%">Action</th>
+            <th width="30%">Favorites</th>
         </tr>
-        @foreach($arrObjCollectionData as $objCollectionData)
+        @foreach($arrObjCollections as $objCollection)
             <tr>
-                <td>{{ $objCollectionData->title }}</td>
-                <td>{{ $objCollectionData->slug }}</td>
-                <td>{{ $objCollectionData->description }}</td>
+                <td>{{ $objCollection->title }}</td>
+                <td>{{ $objCollection->slug }}</td>
+                <td>{{ $objCollection->description }}</td>
                 <td>
-                    <a href="{{route('collection.show',$objCollectionData->id)}}" class="btn btn-primary">view</a>
+                    <a href="{{route('collection.show',$objCollection->id)}}" class="btn btn-primary">view</a>
+                </td>
+                <td>
+                    <form action="/add_favorites_collection/{{$objCollection->id}}" method="post">
+                        {{ csrf_field() }}
+                        @if($objCollection->isFavortted() == 1)
+                            <button class="btn btn-success">UnFavorites</button>
+                        @else
+                            <button class="btn btn-success">Favorites</button>
+                        @endif
+                    </form>
                 </td>
             </tr>
         @endforeach
     </table>
     <hr>
-    {!! $arrObjCollectionData->links() !!}
+    {!! $arrObjCollections->links() !!}
     <div class="modal fade" id="collectionsModal" tabindex="-1" role="dialog" aria-labelledby="favoritesModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

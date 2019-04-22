@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Module\Resource;
 use App\Module\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class CollectionsController extends Controller
 {
@@ -13,8 +15,9 @@ class CollectionsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $arrObjCollectionData = Collection::latest()->paginate(5);
-        return view('collection_index', compact('arrObjCollectionData'))
+        $arrObjCollections = Collection::latest()->paginate(5)
+        ;
+        return view('collection_index', compact('arrObjCollections'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -58,7 +61,6 @@ class CollectionsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($intId) {
-
         $objCollection      = Collection::findOrFail($intId);
         $arrObjResources    = Resource::all();
 
@@ -114,12 +116,18 @@ class CollectionsController extends Controller
         return redirect('collection/'.$intCollectionId)->with('success', 'Data is successfully deleted');
     }
 
-   /* public function postAddResourceToCollection() {
-        $intResourceId = request()->get('resource_id');
-        $intCollectionId = request()->get('collection_id');
-        $objCollection = Collection::find($intCollectionId);
-        $objCollection->resources()->attach($intResourceId);
-    }*/
-
+    /**
+     * @param $intUserId
+     */
+    public function setFavorite($intUserId) {
+        $boolIsFavoritted = Redis::SISMEMBER('favorite:collection', $intUserId);
+        if($boolIsFavoritted == 1) {
+            $objRedis = Redis::srem('favorite:collection', $intUserId);
+        }
+        else {
+            $objRedis = Redis::sadd('favorite:collection', $intUserId);
+        }
+        return redirect()->back();
+    }
 
 }
