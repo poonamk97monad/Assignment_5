@@ -28,7 +28,7 @@ class StoreAddResourceToCollection extends FormRequest
             'resource_id'   => ['required'],*/
             'title'         => ['required'],
             'description'   => ['required'],
-            'file_upload'   => ['required']
+            'slug'          => ['required'],
         ];
     }
 }

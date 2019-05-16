@@ -18,6 +18,7 @@ class CreateResourcesTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('description');
+            $table->text('modeltype');
             $table->string('file_upload');
             $table->timestamps();
         });

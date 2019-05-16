@@ -1,91 +1,25 @@
 @extends('parent')
-
-@section('main')
-    <div class="jumbotron text-center">
-        <div align="right">
-            <a href="{{ route('resources.index') }}" class="btn btn-default">Back</a>
-        </div>
-        <br/>
-        <h2>
-            <img src="{{ URL::to('/') }}/file_upload/{{ $arrObjResources->file_upload }}" class="img-thumbnail" width="75" />
-           </h2>
-        <h3>Title - {{ $arrObjResources->title}} </h3>
-        <h3>Slug - {{ $arrObjResources->slug }} </h3>
-        <h3>Description - {{ $arrObjResources->description }}</h3>
+@if ($strMessage =Session::get('success') )
+    <div class="alert alert-success">
+        <p>{{$strMessage}}</p>
     </div>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#resources">Add Resources</button>
-    <hr>
-    <h3>list of collection items of this resources</h3>
-    @if($arrObjResources->collections->count())
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th width="35%">Title</th>
-                <th width="35%">Slug</th>
-                <th width="35%">Description</th>
-                <th width="30%">Action</th>
-            </tr>
-            @foreach($arrObjResources->collections as $objCollection)
-                <tr>
-                    <td>{{ $objCollection->title }}</td>
-                    <td>{{ $objCollection->slug }}</td>
-                    <td>{{ $objCollection->description }}</td>
-                    <td>
-                        <form action="/remove-to-collection/{{$arrObjResources->id}}" method="post">
-                            {{ csrf_field() }}
-                            <input type="hidden" name="collection_id" value="{{$objCollection->id}}">
-                            <button class="btn btn-danger">Remove From Collection</button>
-                        </form>
-                    </td>
-                </tr>
+@endif
+@if($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
             @endforeach
-        </table>
-    @endif
-    <div class="modal fade" id="resources"
-         tabindex="-1" role="dialog"
-         aria-labelledby="favoritesModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"
-                        id="favoritesModalLabel">All Collection list</h4>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <form method="post" action="{{ route('resources.store') }}" enctype="multipart/form-data">
-                            {{ csrf_field() }}
-                            @if($arrObjCollection->count())
-                                <table class="table table-bordered table-striped">
-                                    <tr>
-                                        <th width="35%">Title</th>
-                                        <th width="35%">Slug</th>
-                                        <th width="35%">Description</th>
-                                        <th width="30%">Action</th>
-                                    </tr>
-                                    @foreach($arrObjCollection as $objCollection)
-                                        <tr>
-                                            <td>{{ $objCollection->title }}</td>
-                                            <td>{{ $objCollection->slug }}</td>
-                                            <td>{{ $objCollection->description }}</td>
-                                            <td>
-                                                <form action="resource/add-to-collection/{{$arrObjResources->id}}" method="post">
-                                                    {{ csrf_field() }}
-                                                    <input type="hidden" name="collection_id" value="{{$objCollection->id}}">
-                                                    <button class="btn btn-info">Add to resource</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </table>
-                            @endif
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
+        </ul>
+    </div>
+@endif
+<div id="resource-app">
+    <div class="row">
+        <div class="col-md-7">
+            <resources-view :objResource="{{ json_encode($arrObjResource) }}"></resources-view>
         </div>
     </div>
-@endsection
+</div>
+</div>
+
+<script src="{{ asset('js/app.js') }}"></script>

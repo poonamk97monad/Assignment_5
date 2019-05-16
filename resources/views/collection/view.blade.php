@@ -24,7 +24,7 @@
             </tr>
             @foreach($objCollection->resources as $objResource)
                 <tr>
-                    <td><a href="{{ URL::to('/') }}/file_upload/{{ $objResource->file_upload }}">{{ $objResource->file_upload }}</a></td>
+                    <td><img src="{{ URL::to('/') }}/file_upload/{{ $objResource->file_upload }}" class="img-thumbnail" width="75"/></td>
                     <td>{{ $objResource->title }}</td>
                     <td>{{ $objResource->slug }}</td>
                     <td>{{ $objResource->description }}</td>
@@ -65,7 +65,7 @@
                                     </tr>
                                     @foreach($arrObjResources as $objResource)
                                         <tr>
-                                            <td><a href="{{ URL::to('/') }}/file_upload/{{ $objResource->file_upload }}">{{ $objResource->file_upload }}</a></td>
+                                            <td><img src="{{ URL::to('/') }}/file_upload/{{ $objResource->file_upload }}" class="img-thumbnail" width="75"/></td>
                                             <td>{{ $objResource->title }}</td>
                                             <td>{{ $objResource->slug }}</td>
                                             <td>{{ $objResource->description }}</td>

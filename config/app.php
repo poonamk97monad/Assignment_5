@@ -164,7 +164,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
-//        Elasticquent\ElasticquentServiceProvider::class,
+        Elasticquent\ElasticquentServiceProvider::class,
 
         // the Scout package itself
         Laravel\Scout\ScoutServiceProvider::class,
@@ -231,7 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 //        'Es' => Elasticquent\ElasticquentElasticsearchFacade::class,
 
-
+        'Es' => Elasticquent\ElasticquentElasticsearchFacade::class,
     ],
 
 ];
